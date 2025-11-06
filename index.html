@@ -634,6 +634,8 @@
 
                         <option value="Shipping/Delivery">Shipping/Delivery</option>
 
+                        <option value="Product Quality">Product Quality</option>
+
                         <option value="Order Status">Order Status</option>
 
                         <option value="Payment/Billing">Payment/Billing</option>
@@ -710,9 +712,9 @@
 
  
 
-        // Form submission handler
+        // Form submission handler - OPTIMIZED FOR SPEED
 
-        document.getElementById('csatForm').addEventListener('submit', async function(e) {
+        document.getElementById('csatForm').addEventListener('submit', function(e) {
 
             e.preventDefault();
 
@@ -721,8 +723,6 @@
             const submitBtn = document.getElementById('submitBtn');
 
             submitBtn.disabled = true;
-
-            submitBtn.textContent = 'Submitting...';
 
  
 
@@ -758,13 +758,33 @@
 
  
 
-            try {
+            // ✨ OPTIMIZATION: Show success IMMEDIATELY (don't wait!)
 
-                const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxk1vICVrZ-9PLkYjW63GEWyBkc3JjAeirO5LWUL-aaL82wNfMBXOiL24ZqwcH9MGwcCw/exec';
+            document.getElementById('surveyForm').style.display = 'none';
+
+            document.getElementById('successMessage').classList.add('show');
 
  
 
-                const response = await fetch(SCRIPT_URL, {
+            // ✨ Send data in background WITHOUT blocking
+
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxk1vICVrZ-9PLkYjW63GEWyBkc3JjAeirO5LWUL-aaL82wNfMBXOiL24ZqwcH9MGwcCw/exec';
+
+ 
+
+            // Method 1: sendBeacon (most reliable for fire-and-forget)
+
+            if (navigator.sendBeacon) {
+
+                const blob = new Blob([JSON.stringify(formData)], { type: 'application/json' });
+
+                navigator.sendBeacon(SCRIPT_URL, blob);
+
+            } else {
+
+                // Method 2: fetch without waiting (fallback)
+
+                fetch(SCRIPT_URL, {
 
                     method: 'POST',
 
@@ -776,29 +796,33 @@
 
                     },
 
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(formData),
+
+                    keepalive: true
+
+                }).catch(error => {
+
+                    console.log('Background submission:', error);
 
                 });
 
- 
-
-                // Show success message
-
-                document.getElementById('surveyForm').style.display = 'none';
-
-                document.getElementById('successMessage').classList.add('show');
+            }
 
  
 
-            } catch (error) {
+            // ✨ Store in localStorage as backup
 
-                console.error('Error:', error);
+            try {
 
-                alert('There was an error submitting your feedback. Please try again.');
+                const backupData = JSON.parse(localStorage.getItem('pendingFeedback') || '[]');
 
-                submitBtn.disabled = false;
+                backupData.push(formData);
 
-                submitBtn.textContent = 'Submit Feedback';
+                localStorage.setItem('pendingFeedback', JSON.stringify(backupData));
+
+            } catch (e) {
+
+                // Ignore localStorage errors
 
             }
 
