@@ -1,847 +1,402 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Customer Service Feedback</title>
-
     <style>
-
         * {
-
             margin: 0;
-
             padding: 0;
-
             box-sizing: border-box;
-
         }
-
- 
 
         body {
-
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-
             background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-
             min-height: 100vh;
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
             padding: 20px;
-
         }
-
- 
 
         .container {
-
             background: white;
-
             border-radius: 20px;
-
             box-shadow: 0 20px 60px rgba(247, 122, 172, 0.3);
-
             max-width: 500px;
-
             width: 100%;
-
             padding: 40px 30px;
-
             animation: fadeIn 0.5s ease-in;
-
         }
-
- 
 
         @keyframes fadeIn {
-
             from {
-
                 opacity: 0;
-
                 transform: translateY(20px);
-
             }
-
             to {
-
                 opacity: 1;
-
                 transform: translateY(0);
-
             }
-
         }
-
- 
 
         .logo {
-
             text-align: center;
-
             margin-bottom: 40px;
-
         }
-
- 
 
         .logo p {
-
             color: #666;
-
             font-size: 14px;
-
         }
-
- 
 
         .question {
-
             text-align: center;
-
             margin-bottom: 30px;
-
         }
-
- 
 
         .question h2 {
-
             color: #000;
-
             font-size: 22px;
-
             font-weight: 600;
-
             margin-bottom: 10px;
-
         }
-
- 
 
         .question p {
-
             color: #666;
-
             font-size: 14px;
-
         }
-
- 
 
         .rating-container {
-
             display: flex;
-
             justify-content: space-between;
-
             gap: 10px;
-
             margin-bottom: 15px;
-
         }
-
- 
 
         .rating-option {
-
             flex: 1;
-
             text-align: center;
-
         }
-
- 
 
         .rating-option input[type="radio"] {
-
             display: none;
-
         }
-
- 
 
         .rating-option label {
-
             display: block;
-
             padding: 15px 10px;
-
             border: 2px solid #e0e0e0;
-
             border-radius: 12px;
-
             cursor: pointer;
-
             transition: all 0.3s ease;
-
             font-weight: 600;
-
             color: #666;
-
         }
-
- 
 
         .rating-option input[type="radio"]:checked + label {
-
             background: #F77AAC;
-
             border-color: #F77AAC;
-
             color: white;
-
             transform: scale(1.05);
-
         }
-
- 
 
         .rating-option label:hover {
-
             border-color: #F77AAC;
-
             transform: scale(1.02);
-
         }
-
- 
 
         .rating-labels {
-
             display: flex;
-
             justify-content: space-between;
-
             margin-bottom: 30px;
-
             padding: 0 5px;
-
         }
-
- 
 
         .rating-labels span {
-
             font-size: 12px;
-
             color: #999;
-
         }
-
- 
 
         .issue-type {
-
             margin-bottom: 25px;
-
         }
-
- 
 
         .issue-type label {
-
             display: block;
-
             color: #000;
-
             font-weight: 600;
-
             margin-bottom: 8px;
-
             font-size: 14px;
-
         }
-
- 
 
         .issue-type select {
-
             width: 100%;
-
             padding: 12px 15px;
-
             border: 2px solid #e0e0e0;
-
             border-radius: 10px;
-
             font-size: 14px;
-
             color: #333;
-
             background: white;
-
             cursor: pointer;
-
             transition: border-color 0.3s;
-
         }
-
- 
 
         .issue-type select:focus {
-
             outline: none;
-
             border-color: #F77AAC;
-
         }
-
- 
 
         .comment-section {
-
             margin-bottom: 25px;
-
             display: none;
-
         }
-
- 
 
         .comment-section.show {
-
             display: block;
-
             animation: slideDown 0.3s ease;
-
         }
-
- 
 
         @keyframes slideDown {
-
             from {
-
                 opacity: 0;
-
                 max-height: 0;
-
             }
-
             to {
-
                 opacity: 1;
-
                 max-height: 300px;
-
             }
-
         }
-
- 
 
         .comment-section label {
-
             display: block;
-
             color: #000;
-
             font-weight: 600;
-
             margin-bottom: 8px;
-
             font-size: 14px;
-
         }
-
- 
 
         .comment-section textarea {
-
             width: 100%;
-
             padding: 12px 15px;
-
             border: 2px solid #e0e0e0;
-
             border-radius: 10px;
-
             font-size: 14px;
-
             font-family: inherit;
-
             resize: vertical;
-
             min-height: 100px;
-
             transition: border-color 0.3s;
-
         }
-
- 
 
         .comment-section textarea:focus {
-
             outline: none;
-
             border-color: #F77AAC;
-
         }
-
- 
 
         .submit-btn {
-
             width: 100%;
-
             padding: 15px;
-
             background: #F77AAC;
-
             color: white;
-
             border: none;
-
             border-radius: 10px;
-
             font-size: 16px;
-
             font-weight: 600;
-
             cursor: pointer;
-
             transition: all 0.3s ease;
-
         }
-
- 
 
         .submit-btn:hover {
-
             background: #e66999;
-
             transform: translateY(-2px);
-
             box-shadow: 0 10px 20px rgba(247, 122, 172, 0.3);
-
         }
-
- 
 
         .submit-btn:active {
-
             transform: translateY(0);
-
         }
-
- 
 
         .submit-btn:disabled {
-
             background: #ccc;
-
             cursor: not-allowed;
-
             transform: none;
-
         }
-
- 
 
         .success-message {
-
             display: none;
-
             text-align: center;
-
             padding: 20px;
-
         }
-
- 
 
         .success-message.show {
-
             display: block;
-
             animation: fadeIn 0.5s ease;
-
         }
-
- 
 
         .success-message h2 {
-
             color: #F77AAC;
-
             font-size: 28px;
-
             margin-bottom: 15px;
-
         }
-
- 
 
         .success-message p {
-
             color: #666;
-
             font-size: 16px;
-
             margin-bottom: 20px;
-
         }
-
- 
 
         .success-icon {
-
             font-size: 60px;
-
             margin-bottom: 20px;
-
         }
-
- 
 
         @media (max-width: 480px) {
-
             .container {
-
                 padding: 30px 20px;
-
             }
-
- 
 
             .rating-option label {
-
                 padding: 12px 5px;
-
                 font-size: 14px;
-
             }
-
- 
 
             .question h2 {
-
                 font-size: 18px;
-
             }
-
         }
-
     </style>
-
 </head>
-
 <body>
-
     <div class="container">
-
         <div id="surveyForm">
-
             <div class="logo">
-
                 <p>We value your feedback!</p>
-
             </div>
-
- 
 
             <div class="question">
-
                 <h2>How satisfied were you with your support experience?</h2>
-
                 <p>Your feedback helps us improve</p>
-
             </div>
 
- 
-
             <form id="csatForm">
-
                 <div class="rating-container">
-
                     <div class="rating-option">
-
                         <input type="radio" id="rating1" name="rating" value="1" required>
-
                         <label for="rating1">1</label>
-
                     </div>
-
                     <div class="rating-option">
-
                         <input type="radio" id="rating2" name="rating" value="2" required>
-
                         <label for="rating2">2</label>
-
                     </div>
-
                     <div class="rating-option">
-
                         <input type="radio" id="rating3" name="rating" value="3" required>
-
                         <label for="rating3">3</label>
-
                     </div>
-
                     <div class="rating-option">
-
                         <input type="radio" id="rating4" name="rating" value="4" required>
-
                         <label for="rating4">4</label>
-
                     </div>
-
                     <div class="rating-option">
-
                         <input type="radio" id="rating5" name="rating" value="5" required>
-
                         <label for="rating5">5</label>
-
                     </div>
-
                 </div>
-
- 
 
                 <div class="rating-labels">
-
                     <span>Very Dissatisfied</span>
-
                     <span>Very Satisfied</span>
-
                 </div>
-
- 
 
                 <div class="issue-type">
-
                     <label for="issueType">What was your inquiry about? (Optional)</label>
-
                     <select id="issueType" name="issueType">
-
                         <option value="">Select an option</option>
-
                         <option value="Returns/Exchanges">Returns/Exchanges</option>
-
                         <option value="Sizing Issues">Sizing Issues</option>
-
                         <option value="Shipping/Delivery">Shipping/Delivery</option>
-
                         <option value="Product Quality">Product Quality</option>
-
                         <option value="Order Status">Order Status</option>
-
                         <option value="Payment/Billing">Payment/Billing</option>
-
                         <option value="Other">Other</option>
-
                     </select>
-
                 </div>
-
- 
 
                 <div class="comment-section" id="commentSection">
-
                     <label for="comments">What could we have done better?</label>
-
                     <textarea id="comments" name="comments" placeholder="Tell us more about your experience..."></textarea>
-
                 </div>
 
- 
-
                 <button type="submit" class="submit-btn" id="submitBtn">Submit Feedback</button>
-
             </form>
-
         </div>
-
- 
 
         <div class="success-message" id="successMessage">
-
             <div class="success-icon">💖</div>
-
             <h2>Thank You!</h2>
-
             <p>Your feedback has been submitted successfully.</p>
-
             <p style="font-size: 14px; color: #999;">We appreciate you taking the time to help us improve!</p>
-
         </div>
-
     </div>
 
- 
-
     <script>
-
         // Show comment section for low ratings (1-3)
-
         const ratingInputs = document.querySelectorAll('input[name="rating"]');
-
         const commentSection = document.getElementById('commentSection');
 
- 
-
         ratingInputs.forEach(input => {
-
             input.addEventListener('change', function() {
-
                 if (parseInt(this.value) <= 3) {
-
                     commentSection.classList.add('show');
-
                 } else {
-
                     commentSection.classList.remove('show');
-
                 }
-
             });
-
         });
 
- 
-
-        // Form submission handler - OPTIMIZED FOR SPEED
-
+        // Form submission handler
         document.getElementById('csatForm').addEventListener('submit', function(e) {
-
             e.preventDefault();
-
  
-
-            const submitBtn = document.getElementById('submitBtn');
-
-            submitBtn.disabled = true;
-
- 
-
             // Get form data
-
             const rating = document.querySelector('input[name="rating"]:checked').value;
-
             const issueType = document.getElementById('issueType').value;
-
             const comments = document.getElementById('comments').value;
-
             const timestamp = new Date().toISOString();
-
  
-
             // Prepare data for Google Sheets
-
             const formData = {
-
                 timestamp: timestamp,
-
                 rating: rating,
-
                 issueType: issueType || 'Not specified',
-
                 comments: comments || 'No comments',
-
                 ticketId: getURLParameter('ticket') || 'N/A',
-
                 customerEmail: getURLParameter('email') || 'N/A'
-
             };
-
  
-
-            // ✨ OPTIMIZATION: Show success IMMEDIATELY (don't wait!)
-
+            // Show success message immediately
             document.getElementById('surveyForm').style.display = 'none';
-
             document.getElementById('successMessage').classList.add('show');
-
  
-
-            // ✨ Send data in background WITHOUT blocking
-
+            // Send data in background
             const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxk1vICVrZ-9PLkYjW63GEWyBkc3JjAeirO5LWUL-aaL82wNfMBXOiL24ZqwcH9MGwcCw/exec';
-
- 
-
-            // Method 1: sendBeacon (most reliable for fire-and-forget)
-
-            if (navigator.sendBeacon) {
-
-                const blob = new Blob([JSON.stringify(formData)], { type: 'application/json' });
-
-                navigator.sendBeacon(SCRIPT_URL, blob);
-
-            } else {
-
-                // Method 2: fetch without waiting (fallback)
-
-                fetch(SCRIPT_URL, {
-
-                    method: 'POST',
-
-                    mode: 'no-cors',
-
-                    headers: {
-
-                        'Content-Type': 'application/json',
-
-                    },
-
-                    body: JSON.stringify(formData),
-
-                    keepalive: true
-
-                }).catch(error => {
-
-                    console.log('Background submission:', error);
-
-                });
-
-            }
-
- 
-
-            // ✨ Store in localStorage as backup
-
-            try {
-
-                const backupData = JSON.parse(localStorage.getItem('pendingFeedback') || '[]');
-
-                backupData.push(formData);
-
-                localStorage.setItem('pendingFeedback', JSON.stringify(backupData));
-
-            } catch (e) {
-
-                // Ignore localStorage errors
-
-            }
-
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            }).catch(error => console.error('Error:', error));
         });
-
- 
 
         // Helper function to get URL parameters
-
         function getURLParameter(name) {
-
             const urlParams = new URLSearchParams(window.location.search);
-
             return urlParams.get(name);
-
         }
-
     </script>
-
 </body>
-
 </html>
