@@ -8,7 +8,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Customer Service Feedback - MoeFlavor</title>
+    <title>Customer Service Feedback</title>
 
     <style>
 
@@ -634,8 +634,6 @@
 
                         <option value="Shipping/Delivery">Shipping/Delivery</option>
 
-                        <option value="Product Quality">Product Quality</option>
-
                         <option value="Order Status">Order Status</option>
 
                         <option value="Payment/Billing">Payment/Billing</option>
@@ -712,9 +710,9 @@
 
  
 
-        // Form submission handler - OPTIMIZED FOR SPEED WITH NEW DEPLOYMENT URL
+        // Form submission handler
 
-        document.getElementById('csatForm').addEventListener('submit', function(e) {
+        document.getElementById('csatForm').addEventListener('submit', async function(e) {
 
             e.preventDefault();
 
@@ -723,6 +721,8 @@
             const submitBtn = document.getElementById('submitBtn');
 
             submitBtn.disabled = true;
+
+            submitBtn.textContent = 'Submitting...';
 
  
 
@@ -758,97 +758,47 @@
 
  
 
-            // ✨ Show success IMMEDIATELY (optimistic UI)
-
-            document.getElementById('surveyForm').style.display = 'none';
-
-            document.getElementById('successMessage').classList.add('show');
-
- 
-
-            // ✨ NEW DEPLOYMENT URL - Updated Nov 6, 2025
-
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQSXfjEK7Y1GXVdXJrz4b0R0DYag3viIlMUOFSs2dknhO2inHW28Un4JRSHP2lvUzoDQ/exec';
-
- 
-
-            // Try multiple methods for maximum compatibility
-
- 
-
-            // Method 1: GET request with URL parameters (most reliable with Google Apps Script)
-
-            const params = new URLSearchParams(formData);
-
-            const getUrl = SCRIPT_URL + '?' + params.toString();
-
- 
-
-            fetch(getUrl, {
-
-                method: 'GET',
-
-                mode: 'no-cors'
-
-            }).catch(error => {
-
-                console.log('GET request:', error);
-
-            });
-
- 
-
-            // Method 2: POST with JSON (backup)
-
-            fetch(SCRIPT_URL, {
-
-                method: 'POST',
-
-                mode: 'no-cors',
-
-                headers: {
-
-                    'Content-Type': 'application/json',
-
-                },
-
-                body: JSON.stringify(formData),
-
-                keepalive: true
-
-            }).catch(error => {
-
-                console.log('POST request:', error);
-
-            });
-
- 
-
-            // Method 3: sendBeacon with JSON (backup for page unload scenarios)
-
-            if (navigator.sendBeacon) {
-
-                const blob = new Blob([JSON.stringify(formData)], { type: 'application/json' });
-
-                navigator.sendBeacon(SCRIPT_URL, blob);
-
-            }
-
- 
-
-            // ✨ Store in localStorage as backup
-
             try {
 
-                const backupData = JSON.parse(localStorage.getItem('pendingFeedback') || '[]');
+                const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxk1vICVrZ-9PLkYjW63GEWyBkc3JjAeirO5LWUL-aaL82wNfMBXOiL24ZqwcH9MGwcCw/exec';
 
-                backupData.push(formData);
+ 
 
-                localStorage.setItem('pendingFeedback', JSON.stringify(backupData));
+                const response = await fetch(SCRIPT_URL, {
 
-            } catch (e) {
+                    method: 'POST',
 
-                // Ignore localStorage errors
+                    mode: 'no-cors',
+
+                    headers: {
+
+                        'Content-Type': 'application/json',
+
+                    },
+
+                    body: JSON.stringify(formData)
+
+                });
+
+ 
+
+                // Show success message
+
+                document.getElementById('surveyForm').style.display = 'none';
+
+                document.getElementById('successMessage').classList.add('show');
+
+ 
+
+            } catch (error) {
+
+                console.error('Error:', error);
+
+                alert('There was an error submitting your feedback. Please try again.');
+
+                submitBtn.disabled = false;
+
+                submitBtn.textContent = 'Submit Feedback';
 
             }
 
